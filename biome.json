@@ -6,7 +6,11 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "style": {
+        "useImportType": "off",
+        "noNonNullAssertion": "off"
+      }
     },
     "ignore": ["**/.*.js", "node_modules", "dist", ".next"]
   }
