@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint --max-warnings 0",
-    "format": "prettier --write \"**/*.ts\"",
+    "format": "prettier --no-error-on-unmatched-pattern --write \"**/*.(ts|tsx)\"",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
