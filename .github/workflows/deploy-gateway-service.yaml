@@ -3,7 +3,7 @@ name: Deploy Gateway Service
 on:
   push:
     paths:
-      - "/apps/gateway-service/**"
+      - "apps/gateway-service/**"
       - "package.json"
     branches:
       - main
