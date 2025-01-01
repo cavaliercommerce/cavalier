@@ -6,7 +6,8 @@
     "pre-commit": "lint-staged",
     "build": "turbo build",
     "dev": "turbo dev",
-    "lint": "turbo lint",
+    "lint": "biome lint .",
+    "lint:fix": "biome lint --write .",
     "test": "turbo test",
     "format": "turbo format",
     "list-modules": "pnpm m ls --json --depth=-1 | node -e \"const path = require('path'); console.log(JSON.parse(require('fs').readFileSync('/dev/stdin', 'utf-8')).map((m) => path.relative(__dirname, m.path)).filter(Boolean))\""
@@ -22,16 +23,12 @@
   "devDependencies": {
     "@commitlint/config-conventional": "19.6.0",
     "@types/node": "20.3.1",
-    "@typescript-eslint/eslint-plugin": "8.19.0",
-    "@typescript-eslint/parser": "8.19.0",
-    "eslint": "9.17.0",
-    "eslint-config-prettier": "9.1.0",
-    "eslint-plugin-prettier": "5.2.1",
     "husky": "9.1.7",
     "lint-staged": "15.3.0",
     "prettier": "3.4.2",
     "turbo": "2.3.3",
-    "typescript": "5.7.2"
+    "typescript": "5.7.2",
+    "@biomejs/biome": "1.9.4"
   },
   "packageManager": "pnpm@9.0.0",
   "engines": {
