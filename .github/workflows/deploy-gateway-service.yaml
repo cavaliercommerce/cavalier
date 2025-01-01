@@ -11,6 +11,7 @@ on:
     tags:
       - v*
   pull_request:
+  workflow_dispatch:
 
 env:
   IMAGE_NAME: gateway-service
@@ -23,6 +24,20 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
+      - run: echo "node_version=$(cat .github/nodejs.version)" >> $GITHUB_ENV
+      - name: "Use node ${{ env.node_version }}"
+        uses: actions/setup-node@v3
+        with:
+          node-version: "${{ env.node_version }}"
+          cache: "pnpm"
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9.5.0
+      - name: Install dependencies
+        run: pnpm install
+      - name: Run tests
+        run: pnpm test
       - name: Build image
         run: docker build . --file apps/gateway-service/Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
       - name: Log in to registry
