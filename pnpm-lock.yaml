@@ -9,20 +9,23 @@ importers:
   .:
     dependencies:
       '@swc/core':
-        specifier: ^1.10.4
+        specifier: 1.10.4
         version: 1.10.4(@swc/helpers@0.5.15)
       '@total-typescript/ts-reset':
         specifier: 0.6.1
         version: 0.6.1
       '@vitest/coverage-v8':
-        specifier: ^2.1.8
+        specifier: 2.1.8
         version: 2.1.8(vitest@2.1.8(@types/node@20.3.1)(terser@5.37.0))
       unplugin-swc:
-        specifier: ^1.5.1
+        specifier: 1.5.1
         version: 1.5.1(@swc/core@1.10.4(@swc/helpers@0.5.15))(rollup@4.29.1)
       vitest:
-        specifier: ^2.1.8
+        specifier: 2.1.8
         version: 2.1.8(@types/node@20.3.1)(terser@5.37.0)
+      zod:
+        specifier: ^3.24.1
+        version: 3.24.1
     devDependencies:
       '@types/node':
         specifier: 20.3.1
@@ -66,6 +69,12 @@ importers:
       '@prisma/client':
         specifier: 6.1.0
         version: 6.1.0(prisma@6.1.0)
+      add:
+        specifier: ^2.0.6
+        version: 2.0.6
+      nestjs-zod:
+        specifier: ^4.2.0
+        version: 4.2.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(reflect-metadata@0.2.0)(rxjs@7.8.1))(zod@3.24.1)
       prisma:
         specifier: 6.1.0
         version: 6.1.0
@@ -573,6 +582,21 @@ packages:
   '@lukeed/csprng@1.1.0':
     resolution: {integrity: sha512-Z7C/xXCiGWsg0KuKsHTKJxbWhpI3Vs5GwLfOean7MGyVFGqdRgBbAjOCh6u4bbjPc/8MJ2pZmK/0DLdCbivLDA==}
     engines: {node: '>=8'}
+
+  '@nest-zod/z@1.0.1':
+    resolution: {integrity: sha512-NsJ2GN7/k92/UCKfJ/y6R+ANNee44gt8t3U84zqGTcHDlz4gvxWnpciVkAlN7vJOfFOLTjPAXpuZMnpmPNA1Iw==}
+    peerDependencies:
+      '@nestjs/common': ^10.0.0
+      '@nestjs/core': ^10.0.0
+      '@nestjs/swagger': ^7.4.2
+      zod: '>= 3.14.3'
+    peerDependenciesMeta:
+      '@nestjs/common':
+        optional: true
+      '@nestjs/core':
+        optional: true
+      '@nestjs/swagger':
+        optional: true
 
   '@nestjs/cli@10.0.0':
     resolution: {integrity: sha512-14pju3ejAAUpFe1iK99v/b7Bw96phBMV58GXTSm3TcdgaI4O7UTLXTbMiUNyU+LGr/1CPIfThcWqFyKhDIC9VQ==}
@@ -1169,6 +1193,9 @@ packages:
     resolution: {integrity: sha512-cl669nCJTZBsL97OF4kUQm5g5hC2uihk0NxY3WENAC0TYdILVkAyHymAntgxGkl7K+t0cXIrH5siy5S4XkFycA==}
     engines: {node: '>=0.4.0'}
     hasBin: true
+
+  add@2.0.6:
+    resolution: {integrity: sha512-j5QzrmsokwWWp6kUcJQySpbG+xfOBqqKnup3OIk1pz+kB/80SLorZ9V8zHFLO92Lcd+hbvq8bT+zOGoPkmBV0Q==}
 
   ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
@@ -2523,6 +2550,21 @@ packages:
   neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
 
+  nestjs-zod@4.2.0:
+    resolution: {integrity: sha512-ToowaeHS3TApFfX1yKR9NaxVk1ulCVQw0DO3vFaSAW9mLSdOXqFBEg0kHWVVoL630O7EVGveXiCW0r5kL7PdXg==}
+    peerDependencies:
+      '@nestjs/common': ^10.0.0
+      '@nestjs/core': ^10.0.0
+      '@nestjs/swagger': ^7.4.2 || ^8.0.0
+      zod: '>= 3.14.3'
+    peerDependenciesMeta:
+      '@nestjs/common':
+        optional: true
+      '@nestjs/core':
+        optional: true
+      '@nestjs/swagger':
+        optional: true
+
   next@15.1.0:
     resolution: {integrity: sha512-QKhzt6Y8rgLNlj30izdMbxAwjHMFANnLwDwZ+WQh5sMhyt4lEBqDK9QpvWHtIM4rINKPoJ8aiRZKg5ULSybVHw==}
     engines: {node: ^18.18.0 || ^19.8.0 || >= 20.0.0}
@@ -3549,6 +3591,9 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
+  zod@3.24.1:
+    resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
+
 snapshots:
 
   '@ampproject/remapping@2.3.0':
@@ -3855,6 +3900,13 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.0
 
   '@lukeed/csprng@1.1.0': {}
+
+  '@nest-zod/z@1.0.1(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(reflect-metadata@0.2.0)(rxjs@7.8.1))(zod@3.24.1)':
+    dependencies:
+      zod: 3.24.1
+    optionalDependencies:
+      '@nestjs/common': 10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1)
+      '@nestjs/core': 10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(reflect-metadata@0.2.0)(rxjs@7.8.1)
 
   '@nestjs/cli@10.0.0(@swc/core@1.10.4(@swc/helpers@0.5.15))':
     dependencies:
@@ -4475,6 +4527,8 @@ snapshots:
       acorn: 8.14.0
 
   acorn@8.14.0: {}
+
+  add@2.0.6: {}
 
   ajv-formats@2.1.1(ajv@8.12.0):
     optionalDependencies:
@@ -6120,6 +6174,15 @@ snapshots:
 
   neo-async@2.6.2: {}
 
+  nestjs-zod@4.2.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(reflect-metadata@0.2.0)(rxjs@7.8.1))(zod@3.24.1):
+    dependencies:
+      '@nest-zod/z': 1.0.1(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(reflect-metadata@0.2.0)(rxjs@7.8.1))(zod@3.24.1)
+      deepmerge: 4.3.1
+      zod: 3.24.1
+    optionalDependencies:
+      '@nestjs/common': 10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1)
+      '@nestjs/core': 10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(reflect-metadata@0.2.0)(rxjs@7.8.1)
+
   next@15.1.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
       '@next/env': 15.1.0
@@ -7345,3 +7408,5 @@ snapshots:
   yn@3.1.1: {}
 
   yocto-queue@0.1.0: {}
+
+  zod@3.24.1: {}
