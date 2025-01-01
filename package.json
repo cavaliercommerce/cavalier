@@ -8,6 +8,9 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "list-modules": "pnpm m ls --json --depth=-1 | node -e \"const path = require('path'); console.log(JSON.parse(require('fs').readFileSync('/dev/stdin', 'utf-8')).map((m) => path.relative(__dirname, m.path)).filter(Boolean))\""
   },
+  "dependencies": {
+    "@total-typescript/ts-reset": "0.6.1"
+  },
   "devDependencies": {
     "@types/node": "20.3.1",
     "@typescript-eslint/eslint-plugin": "8.19.0",
@@ -22,8 +25,5 @@
   "packageManager": "pnpm@9.0.0",
   "engines": {
     "node": ">=20"
-  },
-  "dependencies": {
-    "@total-typescript/ts-reset": "^0.6.1"
   }
 }
