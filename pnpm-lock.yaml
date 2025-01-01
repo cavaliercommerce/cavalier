@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@biomejs/biome':
-        specifier: ^1.9.4
-        version: 1.9.4
       '@swc/core':
         specifier: 1.10.4
         version: 1.10.4(@swc/helpers@0.5.15)
@@ -30,6 +27,9 @@ importers:
         specifier: 3.24.1
         version: 3.24.1
     devDependencies:
+      '@biomejs/biome':
+        specifier: 1.9.4
+        version: 1.9.4
       '@commitlint/config-conventional':
         specifier: 19.6.0
         version: 19.6.0
