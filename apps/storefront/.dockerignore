@@ -1,0 +1,13 @@
+# Versioning and metadata
+.git
+.gitignore
+.dockerignore
+
+.results
+scripts
+*Dockerfile*
+node_modules
+
+# Environment (contains sensitive data)
+.env
+.env.local
