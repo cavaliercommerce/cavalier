@@ -2,9 +2,6 @@ name: Deploy
 
 on:
   push:
-    paths:
-      - "apps/**"
-      - "package.json"
     branches:
       - main
     tags:
@@ -13,7 +10,26 @@ on:
   workflow_dispatch:
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      services: ${{ steps.filter.outputs.changes }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            gateway-service:
+              - 'apps/gateway-service/**'
+              - 'package.json'
+            storefront:
+              - 'apps/storefront/**'
+              - 'package.json'
+
   push:
+    needs: changes
+    if: ${{ needs.changes.outputs.services != '[]' }}
     strategy:
       matrix:
         service:
@@ -25,6 +41,8 @@ jobs:
             path: apps/storefront
             package: "@cavaliercommerce/storefront"
             dockerfile: apps/storefront/Dockerfile
+        include:
+          - ${{ fromJSON(needs.changes.outputs.services) }}
 
     runs-on: ubuntu-latest
     permissions:
@@ -58,15 +76,19 @@ jobs:
         run: pnpm install
 
       - name: Run tests
+        if: contains(needs.changes.outputs.services, matrix.service.name)
         run: pnpm test --filter ${{ matrix.service.package }}
 
       - name: Build image
+        if: contains(needs.changes.outputs.services, matrix.service.name)
         run: docker build . --file ${{ matrix.service.dockerfile }} --tag ${{ matrix.service.name }} --label "runnumber=${GITHUB_RUN_ID}"
 
       - name: Log in to registry
+        if: contains(needs.changes.outputs.services, matrix.service.name)
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Push image
+        if: contains(needs.changes.outputs.services, matrix.service.name)
         run: |
           IMAGE_ID=ghcr.io/${{ github.repository_owner }}/${{ matrix.service.name }}
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
