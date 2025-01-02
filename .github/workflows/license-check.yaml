@@ -28,5 +28,7 @@ jobs:
         with:
           node-version: "${{ env.node_version }}"
           cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
       - name: Check licenses
         run: npx --yes license-checker-rseidelsohn --production --excludePrivatePackages --onlyAllow "MPL-2.0;UNKNOWN;MIT;Apache;AAL;BSD;Artistic;CC0;ISC;ISCL;PostgreSQL License;Public Domain;Unlicense;UPL;W3C;WTFPL;Python;CC-;BlueOak;LGPL;LGPL-3.0-or-later"
