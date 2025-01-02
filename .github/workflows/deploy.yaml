@@ -48,15 +48,20 @@ jobs:
       contents: read
 
     steps:
-      - name: Skip check
-        if: github.event_name != 'workflow_dispatch' && needs.changes.outputs[matrix.service.name] != 'true'
+      - name: Check if should run
+        id: should-run
         run: |
-          echo "Skipping ${{ matrix.service.name }} - no relevant changes"
-          exit 78
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" || "${{ needs.changes.outputs[matrix.service.name] }}" == "true" ]]; then
+            echo "run=true" >> $GITHUB_OUTPUT
+          else
+            echo "run=false" >> $GITHUB_OUTPUT
+          fi
 
       - uses: actions/checkout@v4
+        if: steps.should-run.outputs.run == 'true'
 
       - name: Cache turbo build setup
+        if: steps.should-run.outputs.run == 'true'
         uses: actions/cache@v4
         with:
           path: .turbo
@@ -65,30 +70,38 @@ jobs:
             ${{ runner.os }}-turbo-
 
       - uses: pnpm/action-setup@v4
+        if: steps.should-run.outputs.run == 'true'
         with:
           version: 9.0.0
 
       - run: echo "node_version=$(cat .github/nodejs.version)" >> $GITHUB_ENV
+        if: steps.should-run.outputs.run == 'true'
 
       - name: "Use node ${{ env.node_version }}"
+        if: steps.should-run.outputs.run == 'true'
         uses: actions/setup-node@v3
         with:
           node-version: "${{ env.node_version }}"
           cache: "pnpm"
 
       - name: Install dependencies
+        if: steps.should-run.outputs.run == 'true'
         run: pnpm install
 
       - name: Run tests
+        if: steps.should-run.outputs.run == 'true'
         run: pnpm test --filter ${{ matrix.service.package }}
 
       - name: Build image
+        if: steps.should-run.outputs.run == 'true'
         run: docker build . --file ${{ matrix.service.dockerfile }} --tag ${{ matrix.service.name }} --label "runnumber=${GITHUB_RUN_ID}"
 
       - name: Log in to registry
+        if: steps.should-run.outputs.run == 'true'
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Push image
+        if: steps.should-run.outputs.run == 'true'
         run: |
           IMAGE_ID=ghcr.io/${{ github.repository_owner }}/${{ matrix.service.name }}
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
