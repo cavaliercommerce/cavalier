@@ -13,7 +13,8 @@ jobs:
   changes:
     runs-on: ubuntu-latest
     outputs:
-      services: ${{ steps.filter.outputs.changes }}
+      gateway-service: ${{ steps.filter.outputs.gateway-service }}
+      storefront: ${{ steps.filter.outputs.storefront }}
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v2
@@ -29,7 +30,6 @@ jobs:
 
   push:
     needs: changes
-    if: ${{ needs.changes.outputs.services != '[]' }}
     strategy:
       matrix:
         service:
@@ -41,8 +41,6 @@ jobs:
             path: apps/storefront
             package: "@cavaliercommerce/storefront"
             dockerfile: apps/storefront/Dockerfile
-        include:
-          - ${{ fromJSON(needs.changes.outputs.services) }}
 
     runs-on: ubuntu-latest
     permissions:
@@ -50,9 +48,20 @@ jobs:
       contents: read
 
     steps:
+      - name: Check if should run
+        id: should-run
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" || "${{ needs.changes.outputs[matrix.service.name] }}" == "true" ]]; then
+            echo "run=true" >> $GITHUB_OUTPUT
+          else
+            echo "run=false" >> $GITHUB_OUTPUT
+          fi
+
       - uses: actions/checkout@v4
+        if: steps.should-run.outputs.run == 'true'
 
       - name: Cache turbo build setup
+        if: steps.should-run.outputs.run == 'true'
         uses: actions/cache@v4
         with:
           path: .turbo
@@ -61,34 +70,38 @@ jobs:
             ${{ runner.os }}-turbo-
 
       - uses: pnpm/action-setup@v4
+        if: steps.should-run.outputs.run == 'true'
         with:
           version: 9.0.0
 
       - run: echo "node_version=$(cat .github/nodejs.version)" >> $GITHUB_ENV
+        if: steps.should-run.outputs.run == 'true'
 
       - name: "Use node ${{ env.node_version }}"
+        if: steps.should-run.outputs.run == 'true'
         uses: actions/setup-node@v3
         with:
           node-version: "${{ env.node_version }}"
           cache: "pnpm"
 
       - name: Install dependencies
+        if: steps.should-run.outputs.run == 'true'
         run: pnpm install
 
       - name: Run tests
-        if: contains(needs.changes.outputs.services, matrix.service.name)
+        if: steps.should-run.outputs.run == 'true'
         run: pnpm test --filter ${{ matrix.service.package }}
 
       - name: Build image
-        if: contains(needs.changes.outputs.services, matrix.service.name)
+        if: steps.should-run.outputs.run == 'true'
         run: docker build . --file ${{ matrix.service.dockerfile }} --tag ${{ matrix.service.name }} --label "runnumber=${GITHUB_RUN_ID}"
 
       - name: Log in to registry
-        if: contains(needs.changes.outputs.services, matrix.service.name)
+        if: steps.should-run.outputs.run == 'true'
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Push image
-        if: contains(needs.changes.outputs.services, matrix.service.name)
+        if: steps.should-run.outputs.run == 'true'
         run: |
           IMAGE_ID=ghcr.io/${{ github.repository_owner }}/${{ matrix.service.name }}
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
