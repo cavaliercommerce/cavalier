@@ -41,8 +41,8 @@ jobs:
             path: apps/storefront
             package: "@cavaliercommerce/storefront"
             dockerfile: apps/storefront/Dockerfile
-
     runs-on: ubuntu-latest
+    name: Deployment of ${{ matrix.service.name }}
     permissions:
       packages: write
       contents: read
