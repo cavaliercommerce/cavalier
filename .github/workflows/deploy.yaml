@@ -24,9 +24,11 @@ jobs:
             gateway-service:
               - 'apps/gateway-service/**'
               - 'package.json'
+              - 'packages/**'
             storefront:
               - 'apps/storefront/**'
               - 'package.json'
+              - 'packages/**'
 
   push:
     needs: changes
