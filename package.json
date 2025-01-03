@@ -9,7 +9,7 @@
     "lint": "biome lint .",
     "lint:fix": "biome lint --write .",
     "test": "turbo test",
-    "format": "turbo format ",
+    "format": "turbo format",
     "list-modules": "pnpm m ls --json --depth=-1 | node -e \"const path = require('path'); console.log(JSON.parse(require('fs').readFileSync('/dev/stdin', 'utf-8')).map((m) => path.relative(__dirname, m.path)).filter(Boolean))\""
   },
   "dependencies": {

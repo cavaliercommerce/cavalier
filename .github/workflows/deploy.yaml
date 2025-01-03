@@ -116,6 +116,7 @@ jobs:
           docker push $IMAGE_ID:$VERSION
 
       - name: Update service with new image
+        if: steps.should-run.outputs.run == 'true'
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
