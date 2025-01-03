@@ -1,0 +1,65 @@
+version: "3.7"
+
+volumes:
+  local_pgdata: {}
+
+services:
+  storefront:
+    image: ghcr.io/cavaliercommerce/storefront:latest
+    ports:
+      - 3000:3000
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 2
+        order: start-first
+        failure_action: rollback
+        delay: 20s
+      rollback_config:
+        parallelism: 2
+        order: stop-first
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+
+  gateway-service:
+    image: ghcr.io/cavaliercommerce/gateway-service:latest
+    ports:
+      - 8080:8080
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 2
+        order: start-first
+        failure_action: rollback
+        delay: 20s
+      rollback_config:
+        parallelism: 2
+        order: stop-first
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+
+  postgres:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - local_pgdata:/var/lib/postgresql/data
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      placement:
+        constraints:
+          - node.role == manager
