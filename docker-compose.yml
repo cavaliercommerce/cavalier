@@ -28,6 +28,8 @@ services:
     image: ghcr.io/cavaliercommerce/gateway-service:latest
     ports:
       - 8080:8080
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/postgres?schema=public
     deploy:
       replicas: 2
       update_config:
@@ -47,7 +49,7 @@ services:
   postgres:
     image: postgres
     ports:
-      - "5432:5432"
+      - 5432:5432
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
