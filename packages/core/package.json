@@ -1,0 +1,24 @@
+{
+  "name": "@cavaliercommerce/core",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "scripts": {
+    "dev": "tsup-node src/index.ts --format cjs --dts --watch",
+    "build": "tsup-node src/index.ts --format cjs --dts --minify"
+  },
+  "devDependencies": {
+    "@cavaliercommerce/typescript-config": "workspace:*",
+    "@types/morgan": "^1.9.9",
+    "tsup": "^8.3.5",
+    "tsup-node": "^0.1.0"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "extends": "@cavaliercommerce/typescript-config/base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": false
+  },
+  "include": ["src/**/*.ts", "src/**/*.js", "../../reset.d.ts"],
+  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
+}
