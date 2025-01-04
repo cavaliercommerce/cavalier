@@ -18,7 +18,7 @@ importers:
         specifier: 2.1.8
         version: 2.1.8(vitest@2.1.8(@types/node@20.3.1)(terser@5.37.0))
       dotenv:
-        specifier: ^16.4.7
+        specifier: 16.4.7
         version: 16.4.7
       unplugin-swc:
         specifier: 1.5.1

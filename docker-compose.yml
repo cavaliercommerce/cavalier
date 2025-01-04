@@ -3,8 +3,14 @@ version: "3.7"
 volumes:
   local_pgdata: {}
 
+networks:
+  app-network:
+    driver: overlay
+
 services:
   storefront:
+    networks:
+      - app-network
     image: ghcr.io/cavaliercommerce/storefront:latest
     ports:
       - 3000:3000
@@ -25,11 +31,13 @@ services:
         window: 120s
 
   gateway-service:
+    networks:
+      - app-network
     image: ghcr.io/cavaliercommerce/gateway-service:latest
     ports:
       - 8080:8080
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/postgres?schema=public
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/postgres?schema=public&connection_limit=5&pool_timeout=0&connect_timeout=300&sslmode=prefer"
     deploy:
       replicas: 2
       update_config:
@@ -47,6 +55,8 @@ services:
         window: 120s
 
   postgres:
+    networks:
+      - app-network
     image: postgres
     ports:
       - 5432:5432
