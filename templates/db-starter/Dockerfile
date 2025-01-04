@@ -10,7 +10,7 @@ RUN apk add --no-cache openssl
 WORKDIR /usr/src/app
 COPY package.json pnpm-lock.yaml* ./
 COPY . .
-RUN turbo prune --scope=@cavaliercommerce/gateway-service --docker
+RUN turbo prune --scope=@cavaliercommerce/db-starter --docker
 
 FROM base AS installer
 WORKDIR /usr/src/app
@@ -24,7 +24,7 @@ COPY --from=builder /usr/src/app/out/full/ .
 
 RUN pnpm install --frozen-lockfile
 COPY turbo.json turbo.json
-RUN turbo run build --filter=@cavaliercommerce/gateway-service...
+RUN turbo run build --filter=@cavaliercommerce/db-starter...
 
 FROM node:20-alpine AS runner
 WORKDIR /usr/src/app
@@ -35,12 +35,12 @@ RUN apk add --no-cache openssl && \
 
 COPY --from=installer --chown=nodejs:nodejs /usr/src/app/package.json ./package.json
 COPY --from=installer --chown=nodejs:nodejs /usr/src/app/node_modules ./node_modules
-COPY --from=installer --chown=nodejs:nodejs /usr/src/app/apps/gateway-service/package.json ./apps/gateway-service/package.json
-COPY --from=installer --chown=nodejs:nodejs /usr/src/app/apps/gateway-service/dist ./apps/gateway-service/dist
-COPY --from=installer --chown=nodejs:nodejs /usr/src/app/apps/gateway-service/node_modules ./apps/gateway-service/node_modules
-COPY --from=installer --chown=nodejs:nodejs /usr/src/app/apps/gateway-service/prisma ./apps/gateway-service/prisma
+COPY --from=installer --chown=nodejs:nodejs /usr/src/app/apps/db-starter/package.json ./apps/db-starter/package.json
+COPY --from=installer --chown=nodejs:nodejs /usr/src/app/apps/db-starter/dist ./apps/db-starter/dist
+COPY --from=installer --chown=nodejs:nodejs /usr/src/app/apps/db-starter/node_modules ./apps/db-starter/node_modules
+COPY --from=installer --chown=nodejs:nodejs /usr/src/app/apps/db-starter/prisma ./apps/db-starter/prisma
 
 USER nodejs
-WORKDIR /usr/src/app/apps/gateway-service
+WORKDIR /usr/src/app/apps/db-starter
 RUN npx prisma generate
 CMD node dist/main.js
