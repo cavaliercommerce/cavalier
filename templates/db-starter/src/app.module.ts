@@ -5,9 +5,10 @@ import { APP_PIPE } from "@nestjs/core";
 import { ZodValidationPipe } from "nestjs-zod";
 import { PrismaModule } from "./prisma/prisma.module";
 import { HttpLoggerMiddleware } from "@cavaliercommerce/core";
+import { HealthModule } from "./health/health.module";
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, HealthModule],
   controllers: [AppController],
   providers: [
     AppService,
