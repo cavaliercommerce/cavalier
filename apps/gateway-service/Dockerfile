@@ -24,6 +24,7 @@ COPY --from=builder /usr/src/app/out/full/ .
 
 RUN pnpm install --frozen-lockfile
 COPY turbo.json turbo.json
+RUN npx prisma generate --schema apps/gateway-service/prisma/schema.prisma
 RUN turbo run build --filter=@cavaliercommerce/gateway-service...
 
 FROM node:20-alpine AS runner
@@ -42,5 +43,4 @@ COPY --from=installer --chown=nodejs:nodejs /usr/src/app/apps/gateway-service/pr
 
 USER nodejs
 WORKDIR /usr/src/app/apps/gateway-service
-RUN npx prisma generate
 CMD node dist/main.js

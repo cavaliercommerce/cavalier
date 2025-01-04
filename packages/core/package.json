@@ -17,8 +17,7 @@
   },
   "devDependencies": {
     "@cavaliercommerce/typescript-config": "workspace:*",
-    "@types/morgan": "^1.9.9",
-    "tsup": "^8.3.5",
-    "tsup-node": "^0.1.0"
+    "@types/morgan": "1.9.9",
+    "tsup": "8.3.5"
   }
 }
