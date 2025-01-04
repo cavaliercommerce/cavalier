@@ -19,9 +19,12 @@
     "test:e2e": "vitest run --config ./vitest.config.e2e.ts"
   },
   "dependencies": {
-    "@cavaliercommerce/core": "workspace:*"
+    "@cavaliercommerce/core": "workspace:*",
+    "@nestjs/swagger": "8.1.0",
+    "cookie-parser": "1.4.7"
   },
   "devDependencies": {
-    "@cavaliercommerce/typescript-config": "workspace:*"
+    "@cavaliercommerce/typescript-config": "workspace:*",
+    "@types/cookie-parser": "1.4.8"
   }
 }
