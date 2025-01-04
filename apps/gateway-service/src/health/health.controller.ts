@@ -32,6 +32,6 @@ export class HealthController {
 }
 
 function getAppVersion() {
-  const packageJson = JSON.parse(readFileSync(join(__dirname, "..", "..", "package.json"), "utf8")) as { version?: string };
+  const packageJson = JSON.parse(readFileSync(join(process.cwd(), "package.json"), "utf8")) as { version?: string };
   return packageJson.version || "N/A";
 }
