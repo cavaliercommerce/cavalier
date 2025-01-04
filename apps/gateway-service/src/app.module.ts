@@ -1,9 +1,10 @@
-import { Module } from "@nestjs/common";
+import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { APP_PIPE } from "@nestjs/core";
 import { ZodValidationPipe } from "nestjs-zod";
 import { PrismaModule } from "./prisma/prisma.module";
+import { HttpLoggerMiddleware } from "@cavaliercommerce/core";
 
 @Module({
   imports: [PrismaModule],
@@ -16,4 +17,8 @@ import { PrismaModule } from "./prisma/prisma.module";
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(HttpLoggerMiddleware).forRoutes("*");
+  }
+}
