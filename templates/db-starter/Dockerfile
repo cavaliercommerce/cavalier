@@ -24,6 +24,7 @@ COPY --from=builder /usr/src/app/out/full/ .
 
 RUN pnpm install --frozen-lockfile
 COPY turbo.json turbo.json
+RUN npx prisma generate --schema apps/db-starter/prisma/schema.prisma
 RUN turbo run build --filter=@cavaliercommerce/db-starter...
 
 FROM node:20-alpine AS runner
@@ -39,6 +40,7 @@ COPY --from=installer --chown=nodejs:nodejs /usr/src/app/apps/db-starter/package
 COPY --from=installer --chown=nodejs:nodejs /usr/src/app/apps/db-starter/dist ./apps/db-starter/dist
 COPY --from=installer --chown=nodejs:nodejs /usr/src/app/apps/db-starter/node_modules ./apps/db-starter/node_modules
 COPY --from=installer --chown=nodejs:nodejs /usr/src/app/apps/db-starter/prisma ./apps/db-starter/prisma
+COPY --from=installer --chown=nodejs:nodejs /usr/src/app/packages ./packages
 
 USER nodejs
 WORKDIR /usr/src/app/apps/db-starter

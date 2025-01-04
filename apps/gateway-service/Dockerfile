@@ -40,6 +40,7 @@ COPY --from=installer --chown=nodejs:nodejs /usr/src/app/apps/gateway-service/pa
 COPY --from=installer --chown=nodejs:nodejs /usr/src/app/apps/gateway-service/dist ./apps/gateway-service/dist
 COPY --from=installer --chown=nodejs:nodejs /usr/src/app/apps/gateway-service/node_modules ./apps/gateway-service/node_modules
 COPY --from=installer --chown=nodejs:nodejs /usr/src/app/apps/gateway-service/prisma ./apps/gateway-service/prisma
+COPY --from=installer --chown=nodejs:nodejs /usr/src/app/packages ./packages
 
 USER nodejs
 WORKDIR /usr/src/app/apps/gateway-service
