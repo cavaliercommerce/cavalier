@@ -7,6 +7,85 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Test {
-  id String @id @default(uuid())
+model Product {
+  id               String  @id @default(uuid())
+  name             String
+  slug             String? @unique
+  shortDescription String?
+  description      String?
+  attributes       Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  variants ProductVariant[]
+  options  ProductOption[]
+}
+
+model ProductOption {
+  id        String  @id @default(uuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  name String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  values ProductOptionValue[]
+}
+
+model ProductOptionValue {
+  id              String        @id @default(uuid())
+  productOptionId String
+  productOption   ProductOption @relation(fields: [productOptionId], references: [id], onDelete: Cascade)
+
+  value String
+
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  ProductVariantOption ProductVariantOption[]
+}
+
+model ProductVariant {
+  id        String  @id @default(uuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  name        String?
+  description String?
+  attributes  Json?
+  images      Json?
+
+  sku String? @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  prices          Price[]
+  selectedOptions ProductVariantOption[]
+}
+
+model ProductVariantOption {
+  id               String         @id @default(uuid())
+  productVariantId String
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id], onDelete: Cascade)
+
+  productOptionValueId String
+  productOptionValue   ProductOptionValue @relation(fields: [productOptionValueId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Price {
+  id               String         @id @default(uuid())
+  productVariantId String
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id], onDelete: Cascade)
+
+  currency String
+  amount   Decimal
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
