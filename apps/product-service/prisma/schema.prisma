@@ -9,6 +9,7 @@ datasource db {
 
 model Product {
   id               String  @id @default(uuid())
+  version          Int     @default(1)
   name             String
   slug             String? @unique
   shortDescription String?
