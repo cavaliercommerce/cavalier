@@ -1,27 +1,9 @@
 import { Controller, UsePipes } from "@nestjs/common";
 import { MessagePattern, Payload } from "@nestjs/microservices";
 import { ProductService } from "./product.service";
-import { createZodDto, ZodValidationPipe } from "nestjs-zod";
-import { z } from "zod";
-
-const CreateProductSchema = z.object({
-  name: z.string().min(1),
-  shortDescription: z.string().optional(),
-  description: z.string().optional(),
-  slug: z.string().optional(),
-});
-
-const UpdateProductSchema = z.object({
-  id: z.string().uuid(),
-  version: z.number().positive(),
-  name: z.string().min(1).optional(),
-  shortDescription: z.string().optional(),
-  description: z.string().optional(),
-  slug: z.string().optional(),
-});
-
-export class CreateProductDto extends createZodDto(CreateProductSchema) {}
-export class UpdateProductDto extends createZodDto(UpdateProductSchema) {}
+import { ZodValidationPipe } from "nestjs-zod";
+import { CreateProductDto } from "./dto/create-product.dto";
+import { UpdateProductDto } from "./dto/update-product.dto";
 
 @Controller()
 @UsePipes(ZodValidationPipe)

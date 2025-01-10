@@ -1,20 +1,8 @@
 import { Injectable, ConflictException, NotFoundException } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 import { PrismaService } from "./prisma/prisma.service";
-
-interface CreateProductData {
-  name: string;
-  shortDescription?: string;
-  description?: string;
-  slug?: string;
-}
-
-interface UpdateProductData {
-  name?: string;
-  shortDescription?: string;
-  description?: string;
-  slug?: string;
-}
+import { CreateProductDto } from "./dto/create-product.dto";
+import { UpdateProductDto } from "./dto/update-product.dto";
 
 @Injectable()
 export class ProductService {
@@ -36,7 +24,7 @@ export class ProductService {
     });
   }
 
-  async create(data: CreateProductData) {
+  async create(data: CreateProductDto) {
     try {
       return await this.prisma.product.create({ data });
     } catch (error) {
@@ -47,7 +35,7 @@ export class ProductService {
     }
   }
 
-  async update(id: string, version: number, data: UpdateProductData) {
+  async update(id: string, version: number, data: UpdateProductDto) {
     try {
       return await this.prisma.product.update({
         where: { id, version },

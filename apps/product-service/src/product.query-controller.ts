@@ -1,7 +1,5 @@
 import { Controller, Get, Param, NotFoundException } from "@nestjs/common";
 import { ProductService } from "./product.service";
-import { z } from "zod";
-import { ZodDto } from "nestjs-zod";
 
 @Controller("products")
 export class ProductQueryController {
