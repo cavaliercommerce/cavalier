@@ -1,8 +1,16 @@
-import { BadRequestException } from "@nestjs/common";
+import { BadRequestException, HttpStatus } from "@nestjs/common";
 import { createZodValidationPipe } from "nestjs-zod";
+import { RpcException } from "@nestjs/microservices";
 import { ZodError } from "zod";
 
-export const ZodValidationPipe = createZodValidationPipe({
+export const RpcZodValidationPipe = createZodValidationPipe({
+  createValidationException: (error: ZodError) => {
+    const formattedError = formatZodError(error);
+    return new RpcException({ status: HttpStatus.BAD_REQUEST, message: "Validation failed", data: formattedError });
+  },
+});
+
+export const HttpZodValidationPipe = createZodValidationPipe({
   createValidationException: (error: ZodError) => {
     const formattedError = formatZodError(error);
     return new BadRequestException(formattedError);

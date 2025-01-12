@@ -18,7 +18,7 @@ describe("Product Query (e2e)", () => {
   let pgContainer: StartedPostgreSqlContainer;
 
   beforeAll(async () => {
-    pgContainer = await new PostgreSqlContainer("postgres:15").withDatabase("test_db").withUsername("test_user").withPassword("test_pass").start();
+    pgContainer = await new PostgreSqlContainer("postgres").withDatabase("test_db").withUsername("test_user").withPassword("test_pass").start();
 
     process.env.DATABASE_URL = `postgresql://${pgContainer.getUsername()}:${pgContainer.getPassword()}@${pgContainer.getHost()}:${pgContainer.getPort()}/${pgContainer.getDatabase()}`;
 

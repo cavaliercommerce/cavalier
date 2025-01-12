@@ -3,10 +3,10 @@ import { MessagePattern, Payload } from "@nestjs/microservices";
 import { ProductService } from "./product.service";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
-import { ParseJsonPipe, ZodValidationPipe } from "@cavaliercommerce/core";
+import { ParseJsonPipe, RpcZodValidationPipe } from "@cavaliercommerce/core";
 
 @Controller()
-@UsePipes(ParseJsonPipe, ZodValidationPipe)
+@UsePipes(ParseJsonPipe, RpcZodValidationPipe)
 export class ProductCommandController {
   constructor(private readonly productService: ProductService) {}
 

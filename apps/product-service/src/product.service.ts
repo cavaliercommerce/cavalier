@@ -1,8 +1,9 @@
-import { Injectable, ConflictException, NotFoundException } from "@nestjs/common";
+import { Injectable, ConflictException, NotFoundException, HttpStatus } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 import { PrismaService } from "./prisma/prisma.service";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
+import { RpcException } from "@nestjs/microservices";
 
 @Injectable()
 export class ProductService {
@@ -29,7 +30,7 @@ export class ProductService {
       return await this.prisma.product.create({ data });
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
-        throw new ConflictException("Slug already in use.");
+        throw new RpcException({ status: HttpStatus.CONFLICT, message: "Slug already in use." });
       }
       throw error;
     }
@@ -46,7 +47,7 @@ export class ProductService {
       });
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
-        throw new ConflictException("Could not update product due to version mismatch or product not found.");
+        throw new RpcException({ status: HttpStatus.CONFLICT, message: "Could not update product due to version mismatch or product not found." });
       }
       throw error;
     }
@@ -59,7 +60,7 @@ export class ProductService {
       });
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
-        throw new ConflictException("Could not delete product due to version mismatch or product not found.");
+        throw new RpcException({ status: HttpStatus.CONFLICT, message: "Could not delete product due to version mismatch or product not found." });
       }
       throw error;
     }

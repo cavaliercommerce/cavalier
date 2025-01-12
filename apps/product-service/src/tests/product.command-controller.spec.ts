@@ -1,5 +1,5 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { INestApplication } from "@nestjs/common";
+import { BadRequestException, ConflictException, INestApplication } from "@nestjs/common";
 import { execSync } from "node:child_process";
 import { firstValueFrom } from "rxjs";
 import { PostgreSqlContainer, StartedPostgreSqlContainer } from "@testcontainers/postgresql";
@@ -12,6 +12,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { ProductService } from "../product.service";
 import { ProductCommandController } from "../product.command-controller";
 
+const RMQ_PORT = 5672;
 describe("Product Command (e2e)", () => {
   let app: INestApplication;
   let pgContainer: StartedPostgreSqlContainer;
@@ -20,12 +21,12 @@ describe("Product Command (e2e)", () => {
   let client: ClientProxy;
 
   beforeAll(async () => {
-    pgContainer = await new PostgreSqlContainer("postgres:15").withDatabase("test_db").withUsername("test_user").withPassword("test_pass").start();
+    pgContainer = await new PostgreSqlContainer("postgres").withDatabase("test_db").withUsername("test_user").withPassword("test_pass").start();
 
-    rabbitMQContainer = await new RabbitMQContainer("rabbitmq:latest").withExposedPorts(5672, 15672).start();
+    rabbitMQContainer = await new RabbitMQContainer("rabbitmq:4-management").withExposedPorts(RMQ_PORT, 15672).start();
 
     process.env.DATABASE_URL = `postgresql://${pgContainer.getUsername()}:${pgContainer.getPassword()}@${pgContainer.getHost()}:${pgContainer.getPort()}/${pgContainer.getDatabase()}`;
-    process.env.RABBITMQ_URL = `amqp://guest:guest@${rabbitMQContainer.getHost()}:${rabbitMQContainer.getMappedPort(5672)}`;
+    process.env.RABBITMQ_URL = `amqp://guest:guest@${rabbitMQContainer.getHost()}:${rabbitMQContainer.getMappedPort(RMQ_PORT)}`;
 
     execSync("CI=true npx prisma migrate dev", {
       env: { ...process.env },
@@ -138,5 +139,57 @@ describe("Product Command (e2e)", () => {
     expect(deletedProduct).toBeTruthy();
     expect(deletedProduct.id).toBe(id);
     expect(productInDb).toBeNull();
+  });
+
+  it("should fail to create product if 'name' is missing", async () => {
+    const invalidPayload = { slug: "bad-request-slug" };
+
+    await expect(firstValueFrom(client.send("product.create", invalidPayload))).rejects.toThrow("Validation failed");
+  });
+
+  it("should fail to create product if slug is already used", async () => {
+    const slug = "duplicate-slug";
+    await prisma.product.create({
+      data: {
+        name: "First With This Slug",
+        slug,
+      },
+    });
+
+    const payload = {
+      name: "Second Product with same slug",
+      slug,
+    };
+
+    await expect(firstValueFrom(client.send("product.create", payload))).rejects.toThrow("Slug already in use");
+  });
+
+  it("should fail to update product if version is mismatched", async () => {
+    const { id, version } = await prisma.product.create({
+      data: { name: "Updatable Product", slug: "version-mismatch" },
+    });
+
+    const mismatchedVersionPayload = {
+      id,
+      version: version + 999,
+      name: "Should Not Work",
+    };
+
+    await expect(firstValueFrom(client.send("product.update", mismatchedVersionPayload))).rejects.toThrow("version mismatch");
+  });
+
+  it("should fail to delete product if version is mismatched", async () => {
+    const { id, version } = await prisma.product.create({
+      data: { name: "Deletable Product", slug: "will-fail-delete" },
+    });
+
+    const mismatchedDeletePayload = { id, version: version + 999 };
+    await expect(firstValueFrom(client.send("product.delete", mismatchedDeletePayload))).rejects.toThrow("version mismatch");
+  });
+
+  it("should handle parse error if invalid JSON is passed as string", async () => {
+    const malformedJsonPayload = '{ "name": "No closing brace" ';
+
+    await expect(firstValueFrom(client.send("product.create", malformedJsonPayload))).rejects.toThrow("Invalid JSON");
   });
 });

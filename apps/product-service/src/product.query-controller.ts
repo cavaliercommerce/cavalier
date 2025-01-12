@@ -1,7 +1,9 @@
-import { Controller, Get, Param, NotFoundException } from "@nestjs/common";
+import { Controller, Get, Param, NotFoundException, UsePipes } from "@nestjs/common";
 import { ProductService } from "./product.service";
+import { HttpZodValidationPipe } from "@cavaliercommerce/core";
 
 @Controller("products")
+@UsePipes(HttpZodValidationPipe)
 export class ProductQueryController {
   constructor(private readonly productService: ProductService) {}
 
