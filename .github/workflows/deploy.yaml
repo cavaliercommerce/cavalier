@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       gateway-service: ${{ steps.filter.outputs.gateway-service }}
+      product-service: ${{ steps.filter.outputs.product-service }}
       storefront: ${{ steps.filter.outputs.storefront }}
     steps:
       - uses: actions/checkout@v4
@@ -23,6 +24,10 @@ jobs:
           filters: |
             gateway-service:
               - 'apps/gateway-service/**'
+              - 'package.json'
+              - 'packages/**'
+            product-service:
+              - 'apps/product-service/**'
               - 'package.json'
               - 'packages/**'
             storefront:
@@ -39,6 +44,10 @@ jobs:
             path: apps/gateway-service
             package: "@cavaliercommerce/gateway-service"
             dockerfile: apps/gateway-service/Dockerfile
+          - name: product-service
+            path: apps/product-service
+            package: "@cavaliercommerce/product-service"
+            dockerfile: apps/product-service/Dockerfile
           - name: storefront
             path: apps/storefront
             package: "@cavaliercommerce/storefront"
