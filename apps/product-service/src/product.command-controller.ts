@@ -1,18 +1,30 @@
 import { Controller, UsePipes } from "@nestjs/common";
-import { MessagePattern, Payload } from "@nestjs/microservices";
+import { Ctx, MessagePattern, Payload, RmqContext } from "@nestjs/microservices";
 import { ProductService } from "./product.service";
-import { ZodValidationPipe } from "nestjs-zod";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
+import { ParseJsonPipe, ZodValidationPipe } from "@cavaliercommerce/core";
 
 @Controller()
-@UsePipes(ZodValidationPipe)
+@UsePipes(ParseJsonPipe, ZodValidationPipe)
 export class ProductCommandController {
   constructor(private readonly productService: ProductService) {}
 
   @MessagePattern("product.create")
-  async createProduct(@Payload() data: CreateProductDto) {
-    return this.productService.create(data);
+  async createProduct(@Payload() data: CreateProductDto, @Ctx() ctx: RmqContext) {
+    const channel = ctx.getChannelRef();
+    const originalMsg = ctx.getMessage();
+
+    try {
+      const updated = await this.productService.create(data);
+
+      channel.ack(originalMsg);
+
+      return updated;
+    } catch (error) {
+      channel.nack(originalMsg);
+      throw error;
+    }
   }
 
   @MessagePattern("product.update")

@@ -1,6 +1,6 @@
 import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { APP_PIPE } from "@nestjs/core";
-import { ZodValidationPipe } from "nestjs-zod";
+import { ZodValidationPipe } from "@cavaliercommerce/core";
 import { PrismaModule } from "./prisma/prisma.module";
 import { HttpLoggerMiddleware } from "@cavaliercommerce/core";
 import { HealthModule } from "./health/health.module";
