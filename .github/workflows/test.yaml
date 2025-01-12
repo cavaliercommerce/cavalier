@@ -36,5 +36,9 @@ jobs:
         run: pnpm install
       - name: Format & Lint
         run: pnpm format
+      - name: Generate Prisma types
+        run: |
+          pnpm dlx prisma@6.1.0 generate --schema apps/gateway-service/prisma/schema.prisma
+          pnpm dlx prisma@6.1.0 generate --schema apps/product-service/prisma/schema.prisma
       - name: Test
         run: pnpm test
