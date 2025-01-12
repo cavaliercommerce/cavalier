@@ -5,12 +5,12 @@ import cookieParser from "cookie-parser";
 
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import path, { join } from "node:path";
 import { patchNestJsSwagger } from "nestjs-zod";
 import { z } from "zod";
 import { INestApplication } from "@nestjs/common";
 
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, "..", ".env.local") });
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -30,6 +30,7 @@ async function bootstrap() {
   });
 
   await app.listen(process.env.PORT ?? 8080);
+  console.log(`Application is running on: ${await app.getUrl()}`);
 }
 
 function getAppVersion() {

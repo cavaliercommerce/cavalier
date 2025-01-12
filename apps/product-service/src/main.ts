@@ -4,31 +4,30 @@ import dotenv from "dotenv";
 import { z } from "zod";
 import { INestApplication } from "@nestjs/common";
 import { MicroserviceOptions, Transport } from "@nestjs/microservices";
+import path from "node:path";
 
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, "..", ".env.local") });
 
 async function bootstrap() {
   const app = await NestFactory.create(ProductModule);
+  await validateEnvs(app);
 
+  app.setGlobalPrefix(process.env.CONTEXT_PATH ?? "/");
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,
     options: {
+      noAck: false,
       urls: [process.env.RABBITMQ_URL ?? "amqp://localhost:5672"],
       queue: "products.commands",
-      noAck: false,
       queueOptions: {
         durable: true,
       },
     },
   });
 
-  await validateEnvs(app);
-
   await app.startAllMicroservices();
-
-  app.setGlobalPrefix(process.env.CONTEXT_PATH ?? "/");
-
-  await app.listen(process.env.PORT ?? 8080);
+  await app.listen(process.env.PORT ?? 8081);
+  console.log(`Application is running on: ${await app.getUrl()}`);
 }
 
 bootstrap();
