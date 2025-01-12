@@ -1,5 +1,5 @@
 import { Controller, UsePipes } from "@nestjs/common";
-import { Ctx, MessagePattern, Payload, RmqContext } from "@nestjs/microservices";
+import { MessagePattern, Payload } from "@nestjs/microservices";
 import { ProductService } from "./product.service";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
@@ -11,7 +11,7 @@ export class ProductCommandController {
   constructor(private readonly productService: ProductService) {}
 
   @MessagePattern("product.create")
-  async createProduct(@Payload() data: CreateProductDto, @Ctx() ctx: RmqContext) {
+  async createProduct(@Payload() data: CreateProductDto) {
     return this.productService.create(data);
   }
 
