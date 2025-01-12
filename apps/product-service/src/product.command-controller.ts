@@ -12,19 +12,7 @@ export class ProductCommandController {
 
   @MessagePattern("product.create")
   async createProduct(@Payload() data: CreateProductDto, @Ctx() ctx: RmqContext) {
-    const channel = ctx.getChannelRef();
-    const originalMsg = ctx.getMessage();
-
-    try {
-      const updated = await this.productService.create(data);
-
-      channel.ack(originalMsg);
-
-      return updated;
-    } catch (error) {
-      channel.nack(originalMsg);
-      throw error;
-    }
+    return this.productService.create(data);
   }
 
   @MessagePattern("product.update")

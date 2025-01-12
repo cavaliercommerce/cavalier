@@ -35,7 +35,7 @@ export class ProductService {
     }
   }
 
-  async update(id: string, version: number, data: UpdateProductDto) {
+  async update(id: string, version: number, data: Partial<UpdateProductDto>) {
     try {
       return await this.prisma.product.update({
         where: { id, version },

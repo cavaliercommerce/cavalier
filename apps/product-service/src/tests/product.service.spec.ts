@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { ProductService } from "./product.service";
+import { ProductService } from "../product.service";
 import { Prisma } from "@prisma/client";
 import { ConflictException } from "@nestjs/common";
-import { PrismaService } from "./prisma/prisma.service";
+import { PrismaService } from "../prisma/prisma.service";
 import { mockDeep, DeepMockProxy } from "vitest-mock-extended";
 
 describe("ProductService", () => {
