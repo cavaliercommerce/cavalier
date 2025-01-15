@@ -16,4 +16,4 @@ coverage
 .editorconfig
 Dockerfile
 README.md
-nodemon.json
+nodemon.json 

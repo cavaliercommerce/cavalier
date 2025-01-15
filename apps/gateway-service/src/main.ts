@@ -9,6 +9,7 @@ import path, { join } from "node:path";
 import { patchNestJsSwagger } from "nestjs-zod";
 import { z } from "zod";
 import { INestApplication } from "@nestjs/common";
+import { MicroserviceOptions, Transport } from "@nestjs/microservices";
 
 dotenv.config({ path: path.join(__dirname, "..", ".env.local") });
 
@@ -29,6 +30,11 @@ async function bootstrap() {
     swaggerUiEnabled: true,
   });
 
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.RMQ,
+  });
+
+  await app.startAllMicroservices();
   await app.listen(process.env.PORT ?? 8080);
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
@@ -45,6 +51,7 @@ export async function validateEnvs(app: INestApplication) {
     PORT: z.string().transform(Number).pipe(z.number().positive()),
     CONTEXT_PATH: z.string().startsWith("/"),
     DATABASE_URL: z.string(),
+    RABBITMQ_URL: z.string().optional(),
   });
 
   const { success, error } = envSchema.safeParse(process.env);

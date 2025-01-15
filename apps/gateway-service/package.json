@@ -21,7 +21,6 @@
   "dependencies": {
     "@cavaliercommerce/core": "workspace:*",
     "@nestjs/swagger": "8.1.0",
-    "@nestjs/terminus": "10.2.3",
     "cookie-parser": "1.4.7"
   },
   "devDependencies": {

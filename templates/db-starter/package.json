@@ -19,8 +19,7 @@
     "test:e2e": "vitest run --config ./vitest.config.e2e.ts"
   },
   "dependencies": {
-    "@cavaliercommerce/core": "workspace:*",
-    "@nestjs/terminus": "10.2.3"
+    "@cavaliercommerce/core": "workspace:*"
   },
   "devDependencies": {
     "@cavaliercommerce/typescript-config": "workspace:*"

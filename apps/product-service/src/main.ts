@@ -17,7 +17,7 @@ async function bootstrap() {
     transport: Transport.RMQ,
     options: {
       urls: [process.env.RABBITMQ_URL ?? "amqp://localhost:5672"],
-      queue: "products.commands",
+      queue: process.env.QUEUE_NAME,
       queueOptions: {
         durable: true,
       },
@@ -37,6 +37,7 @@ export async function validateEnvs(app: INestApplication) {
     CONTEXT_PATH: z.string().startsWith("/"),
     DATABASE_URL: z.string(),
     RABBITMQ_URL: z.string().optional(),
+    QUEUE_NAME: z.string(),
   });
 
   const { success, error } = envSchema.safeParse(process.env);
