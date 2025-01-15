@@ -1,11 +1,10 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { BadRequestException, ConflictException, INestApplication } from "@nestjs/common";
+import { INestApplication } from "@nestjs/common";
 import { execSync } from "node:child_process";
 import { firstValueFrom } from "rxjs";
 import { PostgreSqlContainer, StartedPostgreSqlContainer } from "@testcontainers/postgresql";
 import { RabbitMQContainer, StartedRabbitMQContainer } from "@testcontainers/rabbitmq";
 import { ClientOptions, ClientProxy, ClientProxyFactory, Transport } from "@nestjs/microservices";
-
 import { PrismaModule } from "../prisma/prisma.module";
 import { PrismaService } from "../prisma/prisma.service";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -13,6 +12,7 @@ import { ProductService } from "../product.service";
 import { ProductCommandController } from "../product.command-controller";
 
 const RMQ_PORT = 5672;
+
 describe("Product Command (e2e)", () => {
   let app: INestApplication;
   let pgContainer: StartedPostgreSqlContainer;
@@ -22,7 +22,6 @@ describe("Product Command (e2e)", () => {
 
   beforeAll(async () => {
     pgContainer = await new PostgreSqlContainer("postgres").withDatabase("test_db").withUsername("test_user").withPassword("test_pass").start();
-
     rabbitMQContainer = await new RabbitMQContainer("rabbitmq:4-management").withExposedPorts(RMQ_PORT, 15672).start();
 
     process.env.DATABASE_URL = `postgresql://${pgContainer.getUsername()}:${pgContainer.getPassword()}@${pgContainer.getHost()}:${pgContainer.getPort()}/${pgContainer.getDatabase()}`;
@@ -40,7 +39,6 @@ describe("Product Command (e2e)", () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-
     const options: ClientOptions = {
       transport: Transport.RMQ,
       options: {
@@ -54,6 +52,7 @@ describe("Product Command (e2e)", () => {
     };
 
     app.connectMicroservice(options);
+
     await app.startAllMicroservices();
     await app.init();
 
@@ -75,7 +74,6 @@ describe("Product Command (e2e)", () => {
     };
 
     const createdProduct = await firstValueFrom(client.send("product.create", createPayload));
-
     const productInDb = await prisma.product.findUnique({
       where: { id: createdProduct.id },
     });
@@ -90,11 +88,10 @@ describe("Product Command (e2e)", () => {
     const { id, version } = await prisma.product.create({
       data: {
         name: "Needs Update",
-        slug: "update-this",
+        slug: "some-slug",
         shortDescription: "Will be updated",
       },
     });
-
     const updatePayload = {
       id,
       version,
@@ -103,7 +100,6 @@ describe("Product Command (e2e)", () => {
     };
 
     const updatedProduct = await firstValueFrom(client.send("product.update", updatePayload));
-
     const productInDb = await prisma.product.findUnique({
       where: { id },
     });
@@ -111,7 +107,6 @@ describe("Product Command (e2e)", () => {
     expect(updatedProduct).toBeTruthy();
     expect(updatedProduct.name).toBe("Updated By Command");
     expect(updatedProduct.version).toBe(version + 1);
-
     expect(productInDb).toBeTruthy();
     expect(productInDb?.name).toBe("Updated By Command");
     expect(productInDb?.version).toBe(version + 1);
@@ -126,11 +121,7 @@ describe("Product Command (e2e)", () => {
       },
     });
 
-    const deletePayload = {
-      id,
-      version,
-    };
-
+    const deletePayload = { id, version };
     const deletedProduct = await firstValueFrom(client.send("product.delete", deletePayload));
     const productInDb = await prisma.product.findUnique({
       where: { id },
@@ -143,7 +134,6 @@ describe("Product Command (e2e)", () => {
 
   it("should fail to create product if 'name' is missing", async () => {
     const invalidPayload = { slug: "bad-request-slug" };
-
     await expect(firstValueFrom(client.send("product.create", invalidPayload))).rejects.toThrow("Validation failed");
   });
 
@@ -155,7 +145,6 @@ describe("Product Command (e2e)", () => {
         slug,
       },
     });
-
     const payload = {
       name: "Second Product with same slug",
       slug,
@@ -168,14 +157,13 @@ describe("Product Command (e2e)", () => {
     const { id, version } = await prisma.product.create({
       data: { name: "Updatable Product", slug: "version-mismatch" },
     });
-
     const mismatchedVersionPayload = {
       id,
       version: version + 999,
       name: "Should Not Work",
     };
 
-    await expect(firstValueFrom(client.send("product.update", mismatchedVersionPayload))).rejects.toThrow("version mismatch");
+    await expect(firstValueFrom(client.send("product.update", mismatchedVersionPayload))).rejects.toThrow("Version mismatch");
   });
 
   it("should fail to delete product if version is mismatched", async () => {
@@ -184,12 +172,11 @@ describe("Product Command (e2e)", () => {
     });
 
     const mismatchedDeletePayload = { id, version: version + 999 };
-    await expect(firstValueFrom(client.send("product.delete", mismatchedDeletePayload))).rejects.toThrow("version mismatch");
+    await expect(firstValueFrom(client.send("product.delete", mismatchedDeletePayload))).rejects.toThrow("Version mismatch");
   });
 
   it("should handle parse error if invalid JSON is passed as string", async () => {
     const malformedJsonPayload = '{ "name": "No closing brace" ';
-
     await expect(firstValueFrom(client.send("product.create", malformedJsonPayload))).rejects.toThrow("Invalid JSON");
   });
 });
