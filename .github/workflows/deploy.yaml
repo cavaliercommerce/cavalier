@@ -100,7 +100,7 @@ jobs:
         run: pnpm install
 
       - name: Generate Prisma types
-        if: steps.should-run.outputs.run == 'true'
+        if: steps.should-run.outputs.run == 'true' && matrix.service.name != 'storefront'
         run: pnpm dlx prisma@6.1.0 generate --schema apps/${{ matrix.service.name }}/prisma/schema.prisma
 
       - name: Run tests
