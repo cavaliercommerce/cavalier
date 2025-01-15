@@ -37,8 +37,6 @@ export const formatZodError = (error: ZodError): ValidationErrorResponse => {
     };
   });
 
-  console.debug("Validation failed with error", error);
-
   return {
     type: "validation",
     invalidFields,

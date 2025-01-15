@@ -179,4 +179,63 @@ describe("Product Command (e2e)", () => {
     const malformedJsonPayload = '{ "name": "No closing brace" ';
     await expect(firstValueFrom(client.send("product.create", malformedJsonPayload))).rejects.toThrow("Invalid JSON");
   });
+
+  it("should not allow updating product with slug that already exists", async () => {
+    await prisma.product.create({ data: { name: "P1", slug: "unique-slug-1", version: 1 } });
+    const product2 = await prisma.product.create({ data: { name: "P2", slug: "unique-slug-2", version: 1 } });
+    const updatePayload = {
+      id: product2.id,
+      version: product2.version,
+      slug: "unique-slug-1",
+    };
+
+    await expect(firstValueFrom(client.send("product.update", updatePayload))).rejects.toThrow("Slug already in use");
+  });
+
+  it("should change the slug of existing product to a new one", async () => {
+    const product = await prisma.product.create({
+      data: { name: "Will Change Slug", slug: "old-slug", version: 1 },
+    });
+    const updatePayload = {
+      id: product.id,
+      version: product.version,
+      slug: "new-slug",
+    };
+
+    const updated = await firstValueFrom(client.send("product.update", updatePayload));
+    expect(updated.slug).toBe("new-slug");
+  });
+
+  it("should not allow passing more properties than required by dto on product.create", async () => {
+    const createPayload = {
+      name: "Extra Props Product",
+      slug: "extra-props",
+      randomProp: 12345,
+    };
+
+    await expect(firstValueFrom(client.send("product.create", createPayload))).rejects.toThrow("Validation failed");
+  });
+
+  it("should not allow passing more properties than required by dto on product.update", async () => {
+    const product = await prisma.product.create({ data: { name: "Has Extra Props", slug: "has-extra-props", version: 1 } });
+    const updatePayload = {
+      id: product.id,
+      version: product.version,
+      name: "New Name",
+      randomProp: "abc",
+    };
+
+    await expect(firstValueFrom(client.send("product.update", updatePayload))).rejects.toThrow("Validation failed");
+  });
+
+  it("should not allow passing more properties than required by dto on product.delete", async () => {
+    const product = await prisma.product.create({ data: { name: "Delete Extra Props", slug: "delete-extra-props", version: 1 } });
+    const deletePayload = {
+      id: product.id,
+      version: product.version,
+      randomProp: "extra",
+    };
+
+    await expect(firstValueFrom(client.send("product.delete", deletePayload))).rejects.toThrow("Validation failed");
+  });
 });

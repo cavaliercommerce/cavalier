@@ -4,6 +4,7 @@ import { ProductService } from "./product.service";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
 import { ParseJsonPipe, RpcZodValidationPipe } from "@cavaliercommerce/core";
+import { DeleteProductDto } from "./dto/delete-product.dto";
 
 @Controller()
 @UsePipes(ParseJsonPipe, RpcZodValidationPipe)
@@ -21,7 +22,7 @@ export class ProductCommandController {
   }
 
   @MessagePattern("product.delete")
-  async deleteProduct(@Payload() data: { id: string; version: number }) {
+  async deleteProduct(@Payload() data: DeleteProductDto) {
     return this.productService.delete(data.id, data.version);
   }
 }
