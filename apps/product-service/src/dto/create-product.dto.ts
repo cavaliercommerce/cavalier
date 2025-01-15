@@ -6,7 +6,8 @@ const CreateProductSchema = z
     name: z.string().min(1),
     shortDescription: z.string().optional(),
     description: z.string().optional(),
-    slug: z.string().optional(),
+    slug: z.string(),
+    tenantId: z.string().uuid(),
   })
   .strict();
 

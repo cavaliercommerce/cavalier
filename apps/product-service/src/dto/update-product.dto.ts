@@ -4,6 +4,7 @@ import z from "zod";
 const UpdateProductSchema = z
   .object({
     id: z.string().uuid(),
+    tenantId: z.string().uuid(),
     version: z.number().positive(),
     name: z.string().min(1).optional(),
     shortDescription: z.string().optional(),
