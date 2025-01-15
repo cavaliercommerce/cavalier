@@ -99,6 +99,9 @@ jobs:
         if: steps.should-run.outputs.run == 'true'
         run: pnpm install
 
+      - name: Generate Prisma types
+        run: pnpm dlx prisma@6.1.0 generate --schema apps/${{ matrix.service.name }}/prisma/schema.prisma
+
       - name: Run tests
         if: steps.should-run.outputs.run == 'true'
         run: pnpm test --filter ${{ matrix.service.package }}
