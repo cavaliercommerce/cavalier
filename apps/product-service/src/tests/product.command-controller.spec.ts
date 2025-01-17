@@ -250,4 +250,41 @@ describe("Product Command (e2e)", () => {
 
     await expect(firstValueFrom(client.send("product.delete", deletePayload))).rejects.toThrow("Validation failed");
   });
+
+  it("should not allow creating product without tenantId", async () => {
+    const createPayload = {
+      name: "Missing TenantId Product",
+      slug: "missing-tenant-id",
+      tenantId: undefined as never,
+    };
+
+    await expect(firstValueFrom(client.send("product.create", createPayload))).rejects.toThrow("Validation failed");
+  });
+
+  it("should not allow updating product without tenantId", async () => {
+    const product = await prisma.product.create({
+      data: { name: "Missing TenantId Product", slug: "missing-tenant-id", version: 1, tenantId: "550e8400-e29b-41d4-a716-446655440000" },
+    });
+    const updatePayload = {
+      id: product.id,
+      version: product.version,
+      name: "New Name",
+      tenantId: undefined as never,
+    };
+
+    await expect(firstValueFrom(client.send("product.update", updatePayload))).rejects.toThrow("Validation failed");
+  });
+
+  it("should not allow deleting product without tenantId", async () => {
+    const product = await prisma.product.create({
+      data: { name: "Missing TenantId Product", slug: "missing-tenant-id-2", version: 1, tenantId: "550e8400-e29b-41d4-a716-446655440000" },
+    });
+    const deletePayload = {
+      id: product.id,
+      version: product.version,
+      tenantId: undefined as never,
+    };
+
+    await expect(firstValueFrom(client.send("product.delete", deletePayload))).rejects.toThrow("Validation failed");
+  });
 });
