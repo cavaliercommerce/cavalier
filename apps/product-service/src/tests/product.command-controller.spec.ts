@@ -71,6 +71,7 @@ describe("Product Command (e2e)", () => {
       name: "Created By Command",
       slug: "command-slug-create",
       shortDescription: "This product is created via RMQ",
+      tenantId: "550e8400-e29b-41d4-a716-446655440000",
     };
 
     const createdProduct = await firstValueFrom(client.send("product.create", createPayload));
@@ -90,6 +91,7 @@ describe("Product Command (e2e)", () => {
         name: "Needs Update",
         slug: "some-slug",
         shortDescription: "Will be updated",
+        tenantId: "550e8400-e29b-41d4-a716-446655440000",
       },
     });
     const updatePayload = {
@@ -97,6 +99,7 @@ describe("Product Command (e2e)", () => {
       version,
       name: "Updated By Command",
       shortDescription: "Now updated via RMQ",
+      tenantId: "550e8400-e29b-41d4-a716-446655440000",
     };
 
     const updatedProduct = await firstValueFrom(client.send("product.update", updatePayload));
@@ -118,10 +121,11 @@ describe("Product Command (e2e)", () => {
         name: "Temporary Product",
         slug: "temp-product",
         shortDescription: "Will be deleted",
+        tenantId: "550e8400-e29b-41d4-a716-446655440000",
       },
     });
 
-    const deletePayload = { id, version };
+    const deletePayload = { id, version, tenantId: "550e8400-e29b-41d4-a716-446655440000" };
     const deletedProduct = await firstValueFrom(client.send("product.delete", deletePayload));
     const productInDb = await prisma.product.findUnique({
       where: { id },
@@ -133,7 +137,7 @@ describe("Product Command (e2e)", () => {
   });
 
   it("should fail to create product if 'name' is missing", async () => {
-    const invalidPayload = { slug: "bad-request-slug" };
+    const invalidPayload = { slug: "bad-request-slug", tenantId: "550e8400-e29b-41d4-a716-446655440000" };
     await expect(firstValueFrom(client.send("product.create", invalidPayload))).rejects.toThrow("Validation failed");
   });
 
@@ -143,11 +147,13 @@ describe("Product Command (e2e)", () => {
       data: {
         name: "First With This Slug",
         slug,
+        tenantId: "550e8400-e29b-41d4-a716-446655440000",
       },
     });
     const payload = {
       name: "Second Product with same slug",
       slug,
+      tenantId: "550e8400-e29b-41d4-a716-446655440000",
     };
 
     await expect(firstValueFrom(client.send("product.create", payload))).rejects.toThrow("Slug already in use");
@@ -155,12 +161,13 @@ describe("Product Command (e2e)", () => {
 
   it("should fail to update product if version is mismatched", async () => {
     const { id, version } = await prisma.product.create({
-      data: { name: "Updatable Product", slug: "version-mismatch" },
+      data: { name: "Updatable Product", slug: "version-mismatch", tenantId: "550e8400-e29b-41d4-a716-446655440000" },
     });
     const mismatchedVersionPayload = {
       id,
       version: version + 999,
       name: "Should Not Work",
+      tenantId: "550e8400-e29b-41d4-a716-446655440000",
     };
 
     await expect(firstValueFrom(client.send("product.update", mismatchedVersionPayload))).rejects.toThrow("Version mismatch");
@@ -168,10 +175,10 @@ describe("Product Command (e2e)", () => {
 
   it("should fail to delete product if version is mismatched", async () => {
     const { id, version } = await prisma.product.create({
-      data: { name: "Deletable Product", slug: "will-fail-delete" },
+      data: { name: "Deletable Product", slug: "will-fail-delete", tenantId: "550e8400-e29b-41d4-a716-446655440000" },
     });
 
-    const mismatchedDeletePayload = { id, version: version + 999 };
+    const mismatchedDeletePayload = { id, version: version + 999, tenantId: "550e8400-e29b-41d4-a716-446655440000" };
     await expect(firstValueFrom(client.send("product.delete", mismatchedDeletePayload))).rejects.toThrow("Version mismatch");
   });
 
@@ -181,12 +188,13 @@ describe("Product Command (e2e)", () => {
   });
 
   it("should not allow updating product with slug that already exists", async () => {
-    await prisma.product.create({ data: { name: "P1", slug: "unique-slug-1", version: 1 } });
-    const product2 = await prisma.product.create({ data: { name: "P2", slug: "unique-slug-2", version: 1 } });
+    await prisma.product.create({ data: { name: "P1", slug: "unique-slug-1", version: 1, tenantId: "550e8400-e29b-41d4-a716-446655440000" } });
+    const product2 = await prisma.product.create({ data: { name: "P2", slug: "unique-slug-2", version: 1, tenantId: "550e8400-e29b-41d4-a716-446655440000" } });
     const updatePayload = {
       id: product2.id,
       version: product2.version,
       slug: "unique-slug-1",
+      tenantId: "550e8400-e29b-41d4-a716-446655440000",
     };
 
     await expect(firstValueFrom(client.send("product.update", updatePayload))).rejects.toThrow("Slug already in use");
@@ -194,12 +202,13 @@ describe("Product Command (e2e)", () => {
 
   it("should change the slug of existing product to a new one", async () => {
     const product = await prisma.product.create({
-      data: { name: "Will Change Slug", slug: "old-slug", version: 1 },
+      data: { name: "Will Change Slug", slug: "old-slug", version: 1, tenantId: "550e8400-e29b-41d4-a716-446655440000" },
     });
     const updatePayload = {
       id: product.id,
       version: product.version,
       slug: "new-slug",
+      tenantId: "550e8400-e29b-41d4-a716-446655440000",
     };
 
     const updated = await firstValueFrom(client.send("product.update", updatePayload));
@@ -211,29 +220,32 @@ describe("Product Command (e2e)", () => {
       name: "Extra Props Product",
       slug: "extra-props",
       randomProp: 12345,
+      tenantId: "550e8400-e29b-41d4-a716-446655440000",
     };
 
     await expect(firstValueFrom(client.send("product.create", createPayload))).rejects.toThrow("Validation failed");
   });
 
   it("should not allow passing more properties than required by dto on product.update", async () => {
-    const product = await prisma.product.create({ data: { name: "Has Extra Props", slug: "has-extra-props", version: 1 } });
+    const product = await prisma.product.create({ data: { name: "Has Extra Props", slug: "has-extra-props", version: 1, tenantId: "550e8400-e29b-41d4-a716-446655440000" } });
     const updatePayload = {
       id: product.id,
       version: product.version,
       name: "New Name",
       randomProp: "abc",
+      tenantId: "550e8400-e29b-41d4-a716-446655440000",
     };
 
     await expect(firstValueFrom(client.send("product.update", updatePayload))).rejects.toThrow("Validation failed");
   });
 
   it("should not allow passing more properties than required by dto on product.delete", async () => {
-    const product = await prisma.product.create({ data: { name: "Delete Extra Props", slug: "delete-extra-props", version: 1 } });
+    const product = await prisma.product.create({ data: { name: "Delete Extra Props", slug: "delete-extra-props", version: 1, tenantId: "550e8400-e29b-41d4-a716-446655440000" } });
     const deletePayload = {
       id: product.id,
       version: product.version,
       randomProp: "extra",
+      tenantId: "550e8400-e29b-41d4-a716-446655440000",
     };
 
     await expect(firstValueFrom(client.send("product.delete", deletePayload))).rejects.toThrow("Validation failed");

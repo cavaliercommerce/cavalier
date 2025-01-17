@@ -1,4 +1,4 @@
-import { Controller, Get, Param, NotFoundException, UsePipes } from "@nestjs/common";
+import { Controller, Get, Param, UsePipes, Headers } from "@nestjs/common";
 import { ProductService } from "./product.service";
 import { HttpZodValidationPipe } from "@cavaliercommerce/core";
 
@@ -8,25 +8,17 @@ export class ProductQueryController {
   constructor(private readonly productService: ProductService) {}
 
   @Get()
-  async getProducts() {
-    return this.productService.findAll();
+  async getProducts(@Headers("X-Tenant-Id") tenantId: string) {
+    return this.productService.findAll(tenantId);
   }
 
   @Get(":id")
-  async getProduct(@Param("id") id: string) {
-    const product = await this.productService.findOneById(id);
-    if (!product) {
-      throw new NotFoundException("Product not found");
-    }
-    return product;
+  async getProduct(@Param("id") id: string, @Headers("X-Tenant-Id") tenantId: string) {
+    return this.productService.findOneById(id, tenantId);
   }
 
   @Get("slug/:slug")
-  async getProductBySlug(@Param("slug") slug: string) {
-    const product = await this.productService.findOneBySlug(slug);
-    if (!product) {
-      throw new NotFoundException("Product not found");
-    }
-    return product;
+  async getProductBySlug(@Param("slug") slug: string, @Headers("X-Tenant-Id") tenantId: string) {
+    return this.productService.findOneBySlug(slug, tenantId);
   }
 }

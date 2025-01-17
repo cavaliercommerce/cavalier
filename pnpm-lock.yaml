@@ -50,6 +50,9 @@ importers:
       reflect-metadata:
         specifier: 0.2.0
         version: 0.2.0
+      remeda:
+        specifier: 2.19.2
+        version: 2.19.2
       rxjs:
         specifier: 7.8.1
         version: 7.8.1
@@ -2964,6 +2967,9 @@ packages:
     resolution: {integrity: sha512-vUN0wuk3MuhSVMfU/ImnPQAK8QZcXJ339DtVsP3jDscxCe6dT+PsOe3J1BYS9Ec2Fd4oC6ry6bCBebzTya0IYw==}
     deprecated: This version has a critical bug in fallback handling. Please upgrade to reflect-metadata@0.2.2 or newer.
 
+  remeda@2.19.2:
+    resolution: {integrity: sha512-192lSeU0P91TIsYOX+MZ2x8I+enSkVVF0YhUhABix0CZWl+1+3/zn4b3L2d/BiWBTa6RsIeJgvLJj5nYTiTXGA==}
+
   repeat-string@1.6.1:
     resolution: {integrity: sha512-PV0dzCYDNfRi1jCDbJzpW7jNNDRuCOG/jI5ctQcGKt/clZD+YcPS3yIlWuTJMmESC8aevCFmWJy5wjAFgNqN6w==}
     engines: {node: '>=0.10'}
@@ -3453,6 +3459,10 @@ packages:
   type-fest@0.21.3:
     resolution: {integrity: sha512-t0rzBq87m3fVcduHDUFhKmyyX+9eo6WQjZvf51Ea/M0Q7+T374Jp1aUiyUl0GKxp8M/OETVHSDvmkyPgvX+X2w==}
     engines: {node: '>=10'}
+
+  type-fest@4.32.0:
+    resolution: {integrity: sha512-rfgpoi08xagF3JSdtJlCwMq9DGNDE0IMh3Mkpc1wUypg9vPi786AiqeBBKcqvIkq42azsBM85N490fyZjeUftw==}
+    engines: {node: '>=16'}
 
   type-is@1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
@@ -6292,6 +6302,10 @@ snapshots:
 
   reflect-metadata@0.2.0: {}
 
+  remeda@2.19.2:
+    dependencies:
+      type-fest: 4.32.0
+
   repeat-string@1.6.1: {}
 
   require-from-string@2.0.2: {}
@@ -6864,6 +6878,8 @@ snapshots:
   type-fest@0.20.2: {}
 
   type-fest@0.21.3: {}
+
+  type-fest@4.32.0: {}
 
   type-is@1.6.18:
     dependencies:

@@ -2,8 +2,9 @@
 CREATE TABLE "Product" (
     "id" TEXT NOT NULL,
     "version" INTEGER NOT NULL DEFAULT 1,
+    "slug" TEXT NOT NULL,
+    "tenantId" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "slug" TEXT,
     "shortDescription" TEXT,
     "description" TEXT,
     "attributes" JSONB,
@@ -74,7 +75,13 @@ CREATE TABLE "Price" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Product_slug_key" ON "Product"("slug");
+CREATE INDEX "Product_tenantId_idx" ON "Product"("tenantId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Product_id_tenantId_key" ON "Product"("id", "tenantId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Product_tenantId_slug_key" ON "Product"("tenantId", "slug");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "ProductVariant_sku_key" ON "ProductVariant"("sku");

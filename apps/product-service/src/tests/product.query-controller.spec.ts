@@ -39,6 +39,7 @@ describe("Product Query (e2e)", () => {
         name: "Stub Product 1",
         slug: "stub-product-1",
         shortDescription: "This is the first stub product",
+        tenantId: "acme-corp",
       },
     });
     await prisma.product.create({
@@ -46,6 +47,7 @@ describe("Product Query (e2e)", () => {
         name: "Stub Product 2",
         slug: "stub-product-2",
         shortDescription: "This is the second stub product",
+        tenantId: "acme-corp",
       },
     });
     await app.init();
@@ -57,7 +59,7 @@ describe("Product Query (e2e)", () => {
   });
 
   it("should retrieve all stub products", async () => {
-    const response = await request(app.getHttpServer()).get("/products");
+    const response = await request(app.getHttpServer()).get("/products").set("X-Tenant-Id", "acme-corp");
 
     expect(response.status).toBe(200);
     const products = response.body;
@@ -68,7 +70,7 @@ describe("Product Query (e2e)", () => {
   });
 
   it("should retrieve product by slug", async () => {
-    const response = await request(app.getHttpServer()).get("/products/slug/stub-product-1");
+    const response = await request(app.getHttpServer()).get("/products/slug/stub-product-1").set("X-Tenant-Id", "acme-corp");
 
     expect(response.status).toBe(200);
     const product = response.body;
@@ -77,7 +79,7 @@ describe("Product Query (e2e)", () => {
   });
 
   it("should return 404 when slug does not exist", async () => {
-    const response = await request(app.getHttpServer()).get("/products/slug/unknown-product");
+    const response = await request(app.getHttpServer()).get("/products/slug/unknown-product").set("X-Tenant-Id", "acme-corp");
 
     expect(response.status).toBe(404);
     expect(response.body.message).toMatch(/not found/i);
@@ -85,14 +87,14 @@ describe("Product Query (e2e)", () => {
 
   it("should retrieve product by id", async () => {
     const [firstStub] = await prisma.product.findMany({ take: 1 });
-    const response = await request(app.getHttpServer()).get(`/products/${firstStub.id}`);
+    const response = await request(app.getHttpServer()).get(`/products/${firstStub.id}`).set("X-Tenant-Id", "acme-corp");
 
     expect(response.status).toBe(200);
     expect(response.body.slug).toBe(firstStub.slug);
   });
 
   it("should return 404 if product id does not exist", async () => {
-    const response = await request(app.getHttpServer()).get("/products/bogus-id");
+    const response = await request(app.getHttpServer()).get("/products/bogus-id").set("X-Tenant-Id", "acme-corp");
 
     expect(response.status).toBe(404);
     expect(response.body.message).toMatch(/not found/i);

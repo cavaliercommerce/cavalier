@@ -18,11 +18,11 @@ export class ProductCommandController {
 
   @MessagePattern("product.update")
   async updateProduct(@Payload() data: UpdateProductDto) {
-    return this.productService.update(data.id, data.version, data);
+    return this.productService.update(data);
   }
 
   @MessagePattern("product.delete")
   async deleteProduct(@Payload() data: DeleteProductDto) {
-    return this.productService.delete(data.id, data.version);
+    return this.productService.delete(data);
   }
 }

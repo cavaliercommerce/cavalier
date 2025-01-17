@@ -5,6 +5,7 @@ const DeleteProductSchema = z
   .object({
     id: z.string().uuid(),
     version: z.number(),
+    tenantId: z.string().uuid(),
   })
   .strict();
 
