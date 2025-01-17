@@ -77,4 +77,12 @@ describe("ProductService", () => {
   it("should throw exception if tenantId is missing in findOneBySlug", async () => {
     await expect(productService.findOneBySlug("abc", undefined as never)).rejects.toThrow("TenantId is missing");
   });
+
+  it("should throw exception if trying to update non-existent product", async () => {
+    await expect(productService.update({ id: "non-existent-id", version: 1, name: "Updated", slug: "some-slug", tenantId: "acme-corp" })).rejects.toThrow("Product not found");
+  });
+
+  it("should throw exception if trying to delete non-existent product", async () => {
+    await expect(productService.delete({ id: "non-existent-id", version: 1, tenantId: "acme-corp" })).rejects.toThrow("Product not found");
+  });
 });
