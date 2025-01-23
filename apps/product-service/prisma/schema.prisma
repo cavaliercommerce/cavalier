@@ -7,6 +7,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+generator json {
+  provider = "prisma-json-types-generator"
+}
+
 model Product {
   id               String  @id @default(uuid())
   version          Int     @default(1)
@@ -15,6 +19,7 @@ model Product {
   name             String
   shortDescription String?
   description      String?
+  /// ![Record<string, string>]
   attributes       Json?
 
   createdAt DateTime @default(now())
@@ -60,6 +65,7 @@ model ProductVariant {
 
   name        String?
   description String?
+  /// ![Record<string, string>]
   attributes  Json?
   images      Json?
 
