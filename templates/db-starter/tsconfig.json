@@ -4,6 +4,6 @@
     "outDir": "./dist",
     "baseUrl": "./"
   },
-  "include": ["src/**/*.ts", "src/**/*.js", "../../reset.d.ts"],
+  "include": ["src/**/*.ts", "src/**/*.js", "../../reset.d.ts", "prisma.types.d.ts"],
   "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
 }
