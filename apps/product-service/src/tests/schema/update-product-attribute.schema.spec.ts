@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { UpdateProductAttributeSchema } from "../../dto/update-product-attribute.dto";
 
-describe("UpdateProductAttributeDto", () => {
+describe("UpdateProductAttributeSchema", () => {
   describe("valid data", () => {
     it("should validate correct data", () => {
       const validData = {

@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { DeleteProductAttributeSchema } from "../../dto/delete-product-attribute.dto";
 
-describe("DeleteProductAttributeDto", () => {
+describe("DeleteProductAttributeSchema", () => {
   describe("valid cases", () => {
     it("should validate correct data structure", () => {
       const validData = {

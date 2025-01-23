@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { CreateProductSchema } from "../../dto/create-product.dto";
 import { ZodError } from "zod";
 
-describe("CreateProductDto", () => {
+describe("CreateProductSchema", () => {
   const validData = {
     name: "Test Product",
     shortDescription: "Short product description",

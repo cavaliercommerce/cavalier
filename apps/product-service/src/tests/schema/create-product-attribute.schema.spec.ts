@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { CreateProductAttributeSchema } from "../../dto/create-product-attribute.dto";
 import { ZodError } from "zod";
 
-describe("CreateProductAttributeDto", () => {
+describe("CreateProductAttributeSchema", () => {
   const validData = {
     tenantId: "123e4567-e89b-12d3-a456-426614174000",
     productId: "987fcdeb-51a2-43d7-9876-543210987654",
