@@ -62,9 +62,9 @@ describe("Product Command (e2e)", () => {
 
   afterAll(async () => {
     await client.close();
-    await app.close();
     await rabbitMQContainer.stop();
     await pgContainer.stop();
+    await app.close();
   });
 
   it("should create a product", async () => {

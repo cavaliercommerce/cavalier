@@ -7,7 +7,7 @@ export const CreateProductAttributeSchema = z
     productId: z.string().uuid(),
     version: z.number().positive(),
     key: z.string().min(1),
-    value: z.any(),
+    value: z.any().refine((value) => value !== null && value !== undefined, { message: "Value cannot be null or undefined" }),
   })
   .strict();
 
