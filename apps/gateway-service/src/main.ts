@@ -9,7 +9,7 @@ import path, { join } from "node:path";
 import { patchNestJsSwagger } from "nestjs-zod";
 import { z } from "zod";
 import { INestApplication } from "@nestjs/common";
-import { MicroserviceOptions, Transport } from "@nestjs/microservices";
+// import { MicroserviceOptions, Transport } from "@nestjs/microservices";
 
 dotenv.config({ path: path.join(__dirname, "..", ".env.local") });
 
@@ -30,9 +30,9 @@ async function bootstrap() {
     swaggerUiEnabled: true,
   });
 
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.RMQ,
-  });
+  // app.connectMicroservice<MicroserviceOptions>({
+  //   transport: Transport.RMQ,
+  // });
 
   await app.startAllMicroservices();
   await app.listen(process.env.PORT ?? 8080);

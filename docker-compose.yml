@@ -64,11 +64,11 @@ services:
     ports:
       - 8081:8081
     environment:
-      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-product:5433/postgres?schema=public&connection_limit=5&pool_timeout=0&connect_timeout=300&sslmode=prefer"
-      CONTEXT_PATH: "/"
-      PORT: "8081"
       QUEUE_NAME: "products.commands"
       RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672"
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-product:5432/postgres?schema=public&connection_limit=5&pool_timeout=0&connect_timeout=300&sslmode=prefer"
+      CONTEXT_PATH: "/"
+      PORT: "8081"
     deploy:
       replicas: 2
       update_config:
