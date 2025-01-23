@@ -61,6 +61,7 @@ describe("Product Command (e2e)", () => {
   }, 300_000);
 
   afterAll(async () => {
+    await client.close();
     await app.close();
     await rabbitMQContainer.stop();
     await pgContainer.stop();
