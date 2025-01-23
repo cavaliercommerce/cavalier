@@ -97,7 +97,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.should-run.outputs.run == 'true'
-        run: pnpm install
+        run: pnpm install && pnpm add -g prisma-json-types-generator@3.2.2
 
       - name: Generate Prisma types
         if: steps.should-run.outputs.run == 'true' && matrix.service.name != 'storefront'

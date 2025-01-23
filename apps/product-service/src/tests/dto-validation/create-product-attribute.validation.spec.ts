@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { CreateProductAttributeDto, CreateProductAttributeSchema } from "../dto/create-product-attribute.dto";
+import { CreateProductAttributeDto, CreateProductAttributeSchema } from "../../dto/create-product-attribute.dto";
 import { ZodError } from "zod";
 
 describe("CreateProductAttributeDto", () => {
