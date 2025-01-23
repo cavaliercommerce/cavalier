@@ -33,7 +33,7 @@ jobs:
           node-version: "${{ env.node_version }}"
           cache: "pnpm"
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install && pnpm add -g prisma-json-types-generator@3.2.2
       - name: Format & Lint
         run: pnpm format
       - name: Generate Prisma types
