@@ -1,7 +1,7 @@
 import { createZodDto } from "nestjs-zod";
 import z from "zod";
 
-const CreateProductSchema = z
+export const CreateProductSchema = z
   .object({
     name: z.string().min(1),
     shortDescription: z.string().optional(),

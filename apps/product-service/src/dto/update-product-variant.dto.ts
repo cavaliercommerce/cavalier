@@ -1,7 +1,7 @@
 import { createZodDto } from "nestjs-zod";
 import z from "zod";
 
-const UpdateProductVariantSchema = z.object({
+export const UpdateProductVariantSchema = z.object({
   id: z.string().uuid(),
   version: z.number().positive(),
   productId: z.string().uuid().optional(),
