@@ -3,6 +3,7 @@ version: "3.7"
 volumes:
   local_pgdata: {}
   rabbitmq_data: {}
+  beszel_data: {}
 
 networks:
   app-network:
@@ -141,6 +142,47 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq
     networks:
       - app-network
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      placement:
+        constraints:
+          - node.role == manager
+
+  beszel:
+    image: henrygd/beszel:latest
+    networks:
+      - app-network
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    ports:
+      - 8090:8090
+    volumes:
+      - beszel_data:/var/lib/beszel_data
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      placement:
+        constraints:
+          - node.role == manager
+
+  beszel-agent:
+    image: "henrygd/beszel-agent"
+    networks:
+      - app-network
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      PORT: 45876
+      KEY: ${BESZEL_AGENT_KEY}
     deploy:
       replicas: 1
       restart_policy:
