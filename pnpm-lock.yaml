@@ -187,11 +187,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
       '@types/react':
-        specifier: 18.3.1
-        version: 18.3.1
+        specifier: 18.3.18
+        version: 18.3.18
       '@types/react-dom':
         specifier: 18.3.5
-        version: 18.3.5(@types/react@18.3.1)
+        version: 18.3.5(@types/react@18.3.18)
 
   packages/core:
     devDependencies:
@@ -1338,8 +1338,8 @@ packages:
     peerDependencies:
       '@types/react': ^18.0.0
 
-  '@types/react@18.3.1':
-    resolution: {integrity: sha512-V0kuGBX3+prX+DQ/7r2qsv1NsdfnCLnTgnRJ1pYnxykBhGMz+qj+box5lq7XsO5mtZsBqpjwwTu/7wszPfMBcw==}
+  '@types/react@18.3.18':
+    resolution: {integrity: sha512-t4yC+vtgnkYjNSKlFx1jkAhH8LgTo2N/7Qvi83kdEaUtMDiwpbLAktKDaAMlRcJ5eSxZkH74eEGt1ky31d7kfQ==}
 
   '@types/send@0.17.4':
     resolution: {integrity: sha512-x2EM6TJOybec7c52BX0ZspPodMsQUd5L6PRwOunVyVUhXiBSKf3AezDL8Dgvgt5o0UfKNfuA0eMLr2wLT4AiBA==}
@@ -4554,11 +4554,11 @@ snapshots:
 
   '@types/range-parser@1.2.7': {}
 
-  '@types/react-dom@18.3.5(@types/react@18.3.1)':
+  '@types/react-dom@18.3.5(@types/react@18.3.18)':
     dependencies:
-      '@types/react': 18.3.1
+      '@types/react': 18.3.18
 
-  '@types/react@18.3.1':
+  '@types/react@18.3.18':
     dependencies:
       '@types/prop-types': 15.7.13
       csstype: 3.1.3
