@@ -130,7 +130,7 @@ jobs:
 
       - name: Update service with new image
         if: steps.should-run.outputs.run == 'true'
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
