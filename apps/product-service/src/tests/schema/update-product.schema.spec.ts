@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { UpdateProductDto, UpdateProductSchema } from "../../dto/update-product.dto";
+import { UpdateProductSchema } from "../../dto/update-product.dto";
 
 describe("UpdateProductSchema", () => {
   describe("valid data", () => {

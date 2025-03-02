@@ -1,4 +1,4 @@
-import { BadRequestException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
+import { HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
 import { RpcException } from "@nestjs/microservices";
 import { PrismaService } from "./prisma/prisma.service";
 import { CreateProductAttributeDto } from "./dto/create-product-attribute.dto";

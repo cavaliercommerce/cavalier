@@ -8,11 +8,21 @@ import { ProductService } from "./product.service";
 import { ProductAttributesQueryController } from "./product-attributes.query-controller";
 import { ProductAttributesCommandController } from "./product-attributes.command-controller";
 import { ProductAttributesService } from "./product-attributes.service";
+import { ProductVariantsQueryController } from "./product-variants.query-controller";
+import { ProductVariantsCommandController } from "./product-variants.command-controller";
+import { ProductVariantsService } from "./product-variants.service";
 
 @Module({
   imports: [PrismaModule, HealthModule],
-  controllers: [ProductQueryController, ProductCommandController, ProductAttributesQueryController, ProductAttributesCommandController],
-  providers: [ProductService, ProductAttributesService],
+  controllers: [
+    ProductQueryController,
+    ProductCommandController,
+    ProductAttributesQueryController,
+    ProductAttributesCommandController,
+    ProductVariantsQueryController,
+    ProductVariantsCommandController,
+  ],
+  providers: [ProductService, ProductAttributesService, ProductVariantsService],
 })
 export class ProductModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

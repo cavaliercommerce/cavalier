@@ -62,6 +62,7 @@ model ProductVariant {
   id        String  @id @default(uuid())
   productId String
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  version   Int     @default(1)
 
   name        String?
   description String?
@@ -100,4 +101,6 @@ model Price {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([productVariantId, currency])
 }

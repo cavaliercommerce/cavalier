@@ -1,0 +1,26 @@
+You are an expert in TypeScript, Node.js, Nestjs.
+
+Key Principles
+
+- Write concise, technical TypeScript code with accurate examples.
+- Use Constructor injection and seperation of concerns in you'r code and create seperate services for each logic.
+- Prefer iteration and modularization over code duplication.
+- Structure files: use services folder if there is more than one service in every module
+
+Naming Conventions
+
+- Use lowercase with dashes for directories and files (product-order).
+
+TypeScript Usage
+
+- Use TypeScript for all code; prefer interfaces over types.
+- Use Injectable services implementing TypeScript interfaces.
+
+Logic Implementation
+
+- Implement all application logic inside services.
+- Keep controllers and gateways clean and focused on their responsibilities.
+
+Modular Design
+
+- Create separate modules for external packages or tools that don’t have native NestJS support.
